@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+
+  db:
+    image: postgres:16
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_USER: postgres
+      POSTGRES_DB: practice
+    ports:
+      - 5432:5432
+
+  flask:
+    container_name: app
+    build: static
+    volumes:
+      - .:/usr/src/app/back
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
+  bot:
+    container_name: bot
+    build: templates
+    volumes:
+      - .:/usr/src/app/front
+    ports:
+      - 8080:8080
+
+
+volumes:
+  pg_data:
