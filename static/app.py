@@ -9,7 +9,7 @@ import sys
 
 app = Flask(__name__)
 api = Api()
-app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://postgres:1234@localhost:5432/practice"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://postgres:1234@db:5432/practice"
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -20,7 +20,6 @@ ma = Marshmallow(app)
 class VacancyModel(db.Model):
     __tablename__ = 'Vacancy'
 
-    # Схема таблицы
     id = db.Column(db.Integer(), primary_key=True)
     vacancy = db.Column(db.String(200), nullable=False)
     employer = db.Column(db.String(300), nullable=False)
@@ -33,7 +32,6 @@ class VacancyModel(db.Model):
     time = db.Column(db.String(70), default=False)
     timeDay = db.Column(db.String(70), default=False)
 
-    # Ввод в таблицу
     def __init__(self, id, vacancy, employer, address, salaryFrom, salaryTo, requirement, responsibility, alternate_url, time, timeDay):
         self.id = id
         self.vacancy = vacancy
@@ -47,7 +45,6 @@ class VacancyModel(db.Model):
         self.time = time
         self.timeDay = timeDay
 
-    # Вывод из таблицы
     def __repr__(self):
         return [self.vacancy, self.employer, self.address, self.salaryFrom, self.salaryTo, self.requirement, self.responsibility, self.alternate_url, self.time, self.timeDay]
 
@@ -202,4 +199,4 @@ def serch(regs, area):
 
 
 if __name__ == '__main__':
-    app.run(port=8000)
+    app.run(host='0.0.0.0', port=8000)

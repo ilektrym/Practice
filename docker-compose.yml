@@ -4,33 +4,41 @@ services:
 
   db:
     image: postgres:16
-    volumes:
-      - pg_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: 1234
       POSTGRES_USER: postgres
       POSTGRES_DB: practice
     ports:
       - 5432:5432
+    networks:
+      - my-network
 
   flask:
     container_name: app
     build: static
     volumes:
       - .:/usr/src/app/back
+    restart: on-failure:10
+    command:
+      bash -c "flask db upgrade && python app.py"
     ports:
       - 8000:8000
     depends_on:
       - db
+    networks:
+      - my-network
 
   bot:
     container_name: bot
     build: templates
     volumes:
       - .:/usr/src/app/front
+    command:
+      bash -c "python bot.py"
     ports:
       - 8080:8080
+    networks:
+      - my-network
 
-
-volumes:
-  pg_data:
+networks:
+  my-network:

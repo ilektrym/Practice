@@ -38,7 +38,7 @@ def open_search(message):
 
 # Функция выбора вакансии
 def get_id_region(message):
-    url = f"http://0.0.0.0:8000/region/{message.text}"
+    url = f"http://app:8000/region/{message.text}"
     data = requests.get(url).json()
     global region_id
     if data.get('id') is not None:
@@ -94,7 +94,8 @@ def get_time_day(message):
     global time_day
     if message.text != "Пропустить":
         time_day = message.text
-    url = f"http://0.0.0.0:8000/vacancy?vacancy={name}&salaryFrom={salary_from}&salaryTo={salary_to}&" \
+    bot.send_message(message.chat.id, 'Подаждие пожалуйста...')
+    url = f"http://app:8000/vacancy?vacancy={name}&salaryFrom={salary_from}&salaryTo={salary_to}&" \
           f"timeDay={time_day}&area={region_id}"
     global data
     data = requests.get(url).json()
@@ -102,12 +103,22 @@ def get_time_day(message):
         bot.send_message(message.chat.id, "Вакансий по запросу не найдено", reply_markup=types.ReplyKeyboardRemove())
     else:
         vac = data[0]
+        if f"{vac['salaryFrom']}" == '0' and f"{vac['salaryTo']}" != '0':
+            salary = 'От ' + f"{vac['salaryTo']}" + ' Руб'
+        elif f"{vac['salaryTo']}" == '0' and f"{vac['salaryFrom']}" != '0':
+            salary = 'До ' + f"{vac['salaryFrom']}" + ' Руб'
+        elif f"{vac['salaryFrom']}" != '0' and f"{vac['salaryTo']}" != '0':
+            salary = f"{vac['salaryFrom']}" + '-' + f"{vac['salaryTo']}" + ' Руб'
+        else:
+            salary = 'Не указана'
         str = f"{vac['vacancy']}\n" \
-              f"Компания: {vac['employer']}" \
-              f"от{vac['salaryFrom']} до{vac['salaryTo']}\n" \
-              f"Адреc: {vac['address']} \n" \
-              f"Описание: {vac['requirement']}\n"\
-              f"{vac['timeDay']}" \
+              f"Компания:\n {vac['employer']}\n" \
+              f"Зарплата {salary}\n" \
+              f"Адреc:\n {vac['address']} \n" \
+              f"Требования:\n {vac['requirement']}\n" \
+              f"Описание:\n {vac['responsibility']} \n" \
+              f"{vac['timeDay']}\n" \
+              f"Дата публекации {vac['time']}\n" \
               f"Ссылка: {vac['alternate_url']}"
         markup = types.ReplyKeyboardMarkup()
         btn1 = types.KeyboardButton("Следующая")
@@ -121,12 +132,22 @@ def next_vacancy(message):
     if message.text == 'Следующая':
         global k
         vac = data[k]
+        if f"{vac['salaryFrom']}" == '0' and f"{vac['salaryTo']}" != '0':
+            salary = 'От ' + f"{vac['salaryTo']}" + ' Руб'
+        elif f"{vac['salaryTo']}" == '0' and f"{vac['salaryFrom']}" != '0':
+            salary = 'До ' + f"{vac['salaryFrom']}" + ' Руб'
+        elif f"{vac['salaryFrom']}" != '0' and f"{vac['salaryTo']}" != '0':
+            salary = f"{vac['salaryFrom']}" + '-' + f"{vac['salaryTo']}" + ' Руб'
+        else:
+            salary = 'Не указана'
         str = f"{vac['vacancy']}\n" \
-              f"Компания: {vac['employer']}" \
-              f"от{vac['salaryFrom']} до{vac['salaryTo']}\n" \
-              f"Адреc: {vac['address']} \n" \
-              f"Описание: {vac['requirement']}\n" \
+              f"Компания:\n {vac['employer']}\n" \
+              f"Зарплата {salary}\n" \
+              f"Адреc:\n {vac['address']} \n" \
+              f"Требования:\n {vac['requirement']}\n" \
+              f"Описание:\n {vac['responsibility']} \n" \
               f"{vac['timeDay']}\n" \
+              f"Дата публекации {vac['time']}\n" \
               f"Ссылка: {vac['alternate_url']}"
         markup = types.ReplyKeyboardMarkup()
         btn1 = types.KeyboardButton("Следующая")
