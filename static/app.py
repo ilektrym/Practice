@@ -171,7 +171,7 @@ def add_name(text, area):
     reset_table()
     url = f'https://api.hh.ru/vacancies?text={text}&search_field=name&per_page=100&area={area}'
     data = get_data_from_hh(url)
-    parser(data, text)
+    parser(data, text, area)
 
 
 # Функция рессета таблицы
