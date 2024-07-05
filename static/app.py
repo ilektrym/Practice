@@ -112,7 +112,7 @@ def get_headers():
 
 
 # Функция парсера
-def parser(data, text):
+def parser(data, text, area):
     # Полное количество страниц полученых по запросу
     quantity_pagination = round(data['found'] / 100, 0) + 1
     page = 0
@@ -120,7 +120,7 @@ def parser(data, text):
     # Идём по страницам, максимум до 19. Так как максимальная глубина выдаваемых вакансий 2000
     while page < quantity_pagination and page < 20:
         # Получение даннчх со страници
-        url = f'https://api.hh.ru/vacancies?text={text}&search_field=name&per_page=100&page={page}&area=1'
+        url = f'https://api.hh.ru/vacancies?text={text}&search_field=name&per_page=100&page={page}&area={area}'
         data = get_data_from_hh(url)
         # Идём по каждому объявлению и обрабатываем его
         for vacancy in data['items']:
@@ -167,9 +167,9 @@ def parser(data, text):
 
 
 # Функция парсинга для запроса
-def add_name(text):
+def add_name(text, area):
     reset_table()
-    url = f'https://api.hh.ru/vacancies?text={text}&search_field=name&per_page=100&area=1'
+    url = f'https://api.hh.ru/vacancies?text={text}&search_field=name&per_page=100&area={area}'
     data = get_data_from_hh(url)
     parser(data, text)
 
