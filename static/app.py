@@ -63,7 +63,8 @@ class Vacancy(Resource):
         salary_from = request.args.get('salaryFrom', 0)
         salary_to = request.args.get('salaryTo', sys.maxsize)
         time_day = request.args.get('timeDay', '')
-        add_name(vacancy)
+        area = request.args.get('area')
+        add_name(vacancy,area)
         vacancy_shema = VacancyModelShema(many=True)
         if time_day in ["Полная занятость", "Частичная занятость"]:
             return vacancy_shema.dump(VacancyModel.query.filter(VacancyModel.salaryFrom >= salary_from)
@@ -144,12 +145,12 @@ def parser(data, text, area):
                 salaryTo = 0
             # Убераем лишниие заголовки
             if vacancy['snippet']['requirement'] is not None:
-                requirement = vacancy['snippet']['requirement'].replace('<highlighttext>', '')
+                requirement = (vacancy['snippet']['requirement'].replace('<highlighttext>', '')).replace('</highlighttext>', '')
             else:
                 requirement = ''
             # Убераем лишниие заголовки
             if vacancy['snippet']['responsibility'] is not None:
-                responsibility = vacancy['snippet']['responsibility'].replace('<highlighttext>', '')
+                responsibility = (vacancy['snippet']['responsibility'].replace('<highlighttext>', '')).replace('</highlighttext>', '')
             else:
                 responsibility = ''
 

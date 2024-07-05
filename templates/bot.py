@@ -133,9 +133,9 @@ def next_vacancy(message):
         global k
         vac = data[k]
         if f"{vac['salaryFrom']}" == '0' and f"{vac['salaryTo']}" != '0':
-            salary = 'От ' + f"{vac['salaryTo']}" + ' Руб'
+            salary = 'от ' + f"{vac['salaryTo']}" + ' Руб'
         elif f"{vac['salaryTo']}" == '0' and f"{vac['salaryFrom']}" != '0':
-            salary = 'До ' + f"{vac['salaryFrom']}" + ' Руб'
+            salary = 'до ' + f"{vac['salaryFrom']}" + ' Руб'
         elif f"{vac['salaryFrom']}" != '0' and f"{vac['salaryTo']}" != '0':
             salary = f"{vac['salaryFrom']}" + '-' + f"{vac['salaryTo']}" + ' Руб'
         else:
